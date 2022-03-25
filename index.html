@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Task-2</title>
+</head>
+
+<body>
+    <center>
+        <table>
+            <thead>
+                <form>
+                    <tr>
+                        <th>Name:</th>
+                        <td>
+                            <input type="text" onfocus="this.value=''" placeholder="Name" name="name" id="name" required />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>Age:</th>
+                        <td>
+                            <input type="number" onfocus="this.value=''" placeholder="Age" min="1" max="99" name="age" id="age" required />
+                        </td>
+                    </tr>
+                </form>
+            </thead>
+        </table>
+
+        <br />
+        <table>
+            <tr>
+                <input type="submit" name="button" id="btn" value="save" onclick="AddRow()" />
+            </tr>
+        </table>
+
+        <br /><br />
+
+        <table border="1" id="show">
+            <thead>
+                <tr id="table-header-place-holder">
+                    <th>Name</th>
+
+                    <th>Age</th>
+
+                    
+                </tr>
+            </thead>
+        </table>
+    </center>
+
+    <script>
+        var rIndex,
+            table = document.getElementById("show");
+        var row = 1;
+        var oldname = undefined;
+        var oldage = undefined;
+        var oldvalue = undefined;
+        var newRow = undefined;
+        var count_flag = 0;
+
+        var status = "false";
+
+        function AddRow() {
+            var name = document.getElementById("name").value;
+            var age = document.getElementById("age").value;
+
+            if (!name || !age) {
+                alert("Enter all fields");
+                return;
+            } else if (name == "null" || name == "undefined") {
+                alert("Enter a valid name");
+                return;
+            } else if (age > 99 || age < 1) {
+                alert("Enter a valid age");
+                return;
+            } else {}
+
+            var show = document.getElementById("show");
+
+            var newRow = show.insertRow(row);
+
+            var cell1 = newRow.insertCell(0);
+
+            var cell2 = newRow.insertCell(1);
+            var cell3 = null;
+
+            cell1.innerHTML = "<td>" + name + " </td>";
+
+            cell2.innerHTML = "<td>" + age + " </td>";
+
+            row++;
+
+            editTable(newRow,cell3);
+        }
+        var logs = null;
+        
+        function editTable(newRow,cell3) {
+            var cells = table.getElementsByTagName("td");
+            for (var j = count_flag; j < cells.length; j++) {
+                count_flag++;
+                cells[j].ondblclick = function() {
+                    if (this.hasAttribute("data-clicked")) {
+                        return;
+                    }
+
+                    this.setAttribute("data-clicked", "yes");
+                    this.setAttribute("data-text", this.innerHTML);
+                    var input = document.createElement("input");
+                    input.setAttribute("type", "text");
+                    input.value = this.innerHTML;
+
+                    input.onblur = function() {
+                       
+                   
+                        var td = input.parentElement;
+                        var org_text = input.parentElement.getAttribute("data-text");
+                        var current_text = this.value;
+
+                        var org_text = input.parentElement.getAttribute("data-text");
+                        console.log("org_text " + org_text);
+                        console.log("current_text " + current_text);
+
+                        if(current_text === "null" || current_text === "undefined" )
+                        {
+                            alert("Enter a valid values");
+                            return;
+                        }
+                        if(!current_text)
+                        {
+                            alert("Enter a values");
+                            return;
+                        }
+                        if(current_text.replace(/\s/g, "").length <=0)
+                        {
+                            alert("Enter a valid values");
+                            return;
+                        }
+
+                        if (org_text != current_text  ) {
+
+                       
+                            
+                            console.log("Changes detected!");
+                            td.removeAttribute("data-clicked");
+                            td.removeAttribute("data-text");
+                            td.innerHTML = current_text;
+                            oldvalue = Date() + org_text;
+                            console.log(oldvalue);
+                            console.log(" rIndex " + rIndex);
+                          
+                            if(logs == null)
+                            {
+                                var thead = document.getElementById("table-header-place-holder");
+                                logs = thead.insertCell(2);
+                                logs.innerHTML= "<center><b>Logs</b></center>";
+                            }
+
+                            if(cell3 == null){
+
+                                cell3 = newRow.insertCell(2);
+                                cell3.innerHTML = "<ul>"+"<li>" + oldvalue +" </li>"+" </ul>";
+                            }else{
+                                var temp = cell3.innerHTML;
+                                cell3.innerHTML = "<ul>"+"<li>"+ oldvalue +"</li>"+"</ul>"; 
+                                cell3.innerHTML+=temp;
+                            }
+
+                            
+                            
+                           
+                           
+
+                            console.log(org_text + " is changed to " + current_text);
+                            
+                            
+                        } else {
+                            // alert("Don't Enter a Empty space");
+                            console.log(" No Changes detected!");
+                            td.removeAttribute("data-clicked");
+                            td.removeAttribute("data-text");
+                            td.innerHTML = org_text;
+                        }
+
+                       
+                    };
+
+                    this.innerHTML = "";
+                    this.append(input);
+                    this.firstElementChild.select();
+                };
+            }
+
+            
+        }
+        
+
+       
+
+        
+    </script>
+</body>
+
+</html>
+
+
